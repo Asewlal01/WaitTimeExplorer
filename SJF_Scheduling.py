@@ -56,7 +56,7 @@ def source(env: simpy.Environment, customers: int, lambda_: float, mu: float, co
         yield env.timeout(t)
 
 
-def simulate_SJF(customers: int, lambda_: float, mu: float, n=1, seed=None):
+def simulate_SJF(customers: int, lambda_: float, mu: float, num_servers=1, seed=None):
     """
     Function used to simulate the queue using SJF scheduling.
 
@@ -79,7 +79,7 @@ def simulate_SJF(customers: int, lambda_: float, mu: float, n=1, seed=None):
     env = simpy.Environment()
 
     # Create counter
-    counter = simpy.PriorityResource(env, capacity=n)
+    counter = simpy.PriorityResource(env, capacity=num_servers)
 
     # Run process
     env.process(source(env, customers, lambda_, mu, counter, waiting))
