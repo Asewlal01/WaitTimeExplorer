@@ -1,11 +1,10 @@
-import simpy
 import numpy as np
-import matplotlib.pyplot as plt
+import simpy
 
 
 def customer(env: simpy.Environment, mu: float, counter: simpy.Resource, waiting: list):
     """
-    Function used to serve customers with a constant service time of mu.
+    Function used to serve customers with an expected service time of mu from an exponential distribution.
 
     :param env: Simpy environment
     :param mu: Expected service time
@@ -13,27 +12,27 @@ def customer(env: simpy.Environment, mu: float, counter: simpy.Resource, waiting
     :param waiting: List used to store the waiting time of each customer
     :return: Generator object
     """
+    # Customer has arrived
+    arrive = env.now
 
-    # Time of customer arrival
-    arrival = env.now
-
-    # Wait until customer can get serviced
+    # Wait on counter
     with counter.request() as req:
         yield req
-        # Add waiting time
-        waiting.append(env.now - arrival)
 
-        # Time for service
-        time = 1 / mu
+        # Get waiting time
+        wait = env.now - arrive
+        waiting.append(wait)
+
+        # Service time
+        service_time = np.random.exponential(1 / mu)
 
         # Update time
-        yield env.timeout(time)
+        yield env.timeout(service_time)
 
 
-def source(env: simpy.Environment, customers: int, lambda_: float, mu: float, counter: simpy.Resource,
-           waiting: list):
+def source(env: simpy.Environment, customers: int, lambda_: float, mu: float, counter: simpy.Resource, waiting: list):
     """
-    Function used to create the customers in a M/D/n queueing system
+    Function used to create the customers in a M/M/n queueing system.
 
     :param env: Simpy environment
     :param customers: Number of customers
@@ -57,9 +56,9 @@ def source(env: simpy.Environment, customers: int, lambda_: float, mu: float, co
         yield env.timeout(t)
 
 
-def simulate_MDn(customers: int, rho: float, mu: float, n=1, seed=None):
+def simulate_MMn(customers: int, rho: float, mu: float, n=1, seed=None):
     """
-    Function used to simulate a M/D/n queuing system
+    Function used to simulate a M/M/n queuing system
 
     :param customers: Number of customers
     :param rho: System load
@@ -72,18 +71,16 @@ def simulate_MDn(customers: int, rho: float, mu: float, n=1, seed=None):
     # Calculate lambda
     lambda_ = rho * n * mu
 
-    # Array for waiting time
-    waiting = []
+    # List for saving results
+    wait_times = []
 
-    # Create environment
-    env = simpy.Environment()
+    # Setup and start the simulation
     np.random.seed(seed)
+    env = simpy.Environment()
 
-    # Create process
+    # Start processes and run
     counter = simpy.Resource(env, capacity=n)
-    env.process(source(env, customers, lambda_, mu, counter, waiting))
-
-    # Run process
+    env.process(source(env, customers, lambda_, mu, counter, wait_times))
     env.run()
 
-    return waiting
+    return wait_times

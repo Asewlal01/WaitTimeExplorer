@@ -2,7 +2,7 @@ import simpy
 import numpy as np
 
 
-def customer(env: simpy.Environment, mu: float, counter: simpy.PriorityResource, waiting: list) -> None:
+def customer(env: simpy.Environment, mu: float, counter: simpy.PriorityResource, waiting: list):
     """
     Function used to serve customers with an expected service time of mu. Priority are given to customers with lower
     service time (SJF scheduling).
@@ -11,7 +11,7 @@ def customer(env: simpy.Environment, mu: float, counter: simpy.PriorityResource,
     :param mu: Expected service time
     :param counter: Simpy resource object as counter
     :param waiting: List used to store the waiting time of each customer
-    :return: void
+    :return: Generator object
     """
 
     # Time of customer arrival
@@ -56,7 +56,7 @@ def source(env: simpy.Environment, customers: int, lambda_: float, mu: float, co
         yield env.timeout(t)
 
 
-def simulate_SJF(customers: int, lambda_: float, mu: float, num_servers=1, seed=None):
+def simulate_SJF(customers: int, lambda_: float, mu: float, n=1, seed=None):
     """
     Function used to simulate the queue using SJF scheduling.
 
@@ -71,9 +71,8 @@ def simulate_SJF(customers: int, lambda_: float, mu: float, num_servers=1, seed=
     # Create list for storing waiting times
     waiting = []
 
-    # Apply seed
-    if seed is not None:
-        np.random.seed(seed)
+    # Set seed
+    np.random.seed(seed)
 
     # Create environment
     env = simpy.Environment()

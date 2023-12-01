@@ -3,7 +3,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def customer_MLn(env, mu, p, counter, waiting):
+def customer(env: simpy.Environment, mu: list, p: float, counter: simpy.Resource, waiting: list):
+    """
+    Function used to serve customers with an expected service time described by the hyper-exponential
+
+    :param env: Simpy environment
+    :param mu: Expected service time of each exponential in the hyper-exponential
+    :param p: Probability of first exponential of the hyper-exponential
+    :param counter: Simpy resource object as counter
+    :param waiting: List used to store the waiting time of each customer
+    :return: Generator object
+    """
+
     # Time of customer arrival
     arrival = env.now
 
@@ -22,46 +33,63 @@ def customer_MLn(env, mu, p, counter, waiting):
         yield env.timeout(time)
 
 
-def source_MLn(env, number, arrival, capacity, p, counter, waiting):
+def source(env: simpy.Environment, customers: int, lambda_: float, mu: list, p: float, counter: simpy.Resource,
+           waiting: list):
+    """
+    Function used to create the customers in a M/L/n queueing system with two exponential functions
+    as the hyper-exponential
+
+    :param env: Simpy environment
+    :param customers: Number of customers
+    :param lambda_: Expected arrival time
+    :param mu: Expected service time of each exponential of the hyper-exponential
+    :param p: Probability of first exponential of the hyper-exponential
+    :param counter: Simpy resource object as a counter
+    :param waiting: List used to store data
+    :return: Void
+    """
+
     # Creating customers
-    for i in range(number):
+    for i in range(customers):
         # Create the customer
-        c = customer_MLn(env, capacity, p, counter, waiting)
+        c = customer(env, mu, p, counter, waiting)
         env.process(c)
 
         # Time for new person to arrive
-        t = np.random.exponential(1 / arrival)
+        t = np.random.exponential(1 / lambda_)
 
         # Update time
         yield env.timeout(t)
 
 
-def simulate_MLn(n, customers=100000, mu=[1., 1 / 5], p=0.75, rho=0.9, print_info=False):
-    # Parameters
-    arrival = rho * n * (0.75 * mu[0] + 0.25 * mu[1])
+def simulate_MLn(customers: int, rho: float, mu: list, p: float, n=1, seed=None):
+    """
+    Function used to simulate a M/L/n queuing system
+
+    :param customers: Number of customers
+    :param rho: System load
+    :param mu: Expected service time for each exponential of the hyper-exponential
+    :param p: Probability of first exponential of the hyper-exponential
+    :param n: Number of servers
+    :param seed: Optional seed to reproduce results
+    :return: Waiting time for each customer
+    """
+
+    # Calculate lambda
+    lambda_ = rho * n * (p * mu[0] + (1 - p) * mu[1])
 
     # Array for waiting time
     waiting = []
 
+    # Set seed
+    np.random.seed(seed)
+
     # Create environment
     env = simpy.Environment()
-    np.random.seed(42)
+
     # Create process
     counter = simpy.Resource(env, capacity=n)
-    env.process(source_MLn(env, customers, arrival, mu, p, counter, waiting))
+    env.process(source(env, customers, lambda_, mu, p, counter, waiting))
     env.run()
 
-    # Get mean and standard deviation
-    waiting_mean = np.mean(waiting)
-    waiting_std = np.std(waiting, ddof=1)
-
-    # Get confidence interval
-    waiting_conf = 1.96 * waiting_std / np.sqrt(len(waiting))
-
-    if print_info:
-        print(f'Simulation of M/L/{n}:')
-        print(f'lambda (arrival rate) = {arrival}')
-        print(f'mu (service rate) = {mu}')
-        print(f'{waiting_mean} +- {waiting_conf}')
-
-    return waiting, waiting_mean, waiting_conf
+    return waiting
