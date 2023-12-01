@@ -1,6 +1,5 @@
 import simpy
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def customer(env: simpy.Environment, mu: list, p: float, counter: simpy.Resource, waiting: list):
