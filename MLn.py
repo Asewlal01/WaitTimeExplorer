@@ -7,7 +7,7 @@ def customer(env: simpy.Environment, mu: list, p: float, counter: simpy.Resource
     Function used to serve customers with an expected service time described by the hyper-exponential
 
     :param env: Simpy environment
-    :param mu: Expected service time of each exponential in the hyper-exponential
+    :param mu: Expected service rate of each exponential in the hyper-exponential
     :param p: Probability of first exponential of the hyper-exponential
     :param counter: Simpy resource object as counter
     :param waiting: List used to store the waiting time of each customer
@@ -40,8 +40,8 @@ def source(env: simpy.Environment, customers: int, lambda_: float, mu: list, p: 
 
     :param env: Simpy environment
     :param customers: Number of customers
-    :param lambda_: Expected arrival time
-    :param mu: Expected service time of each exponential of the hyper-exponential
+    :param lambda_: Expected arrival rate
+    :param mu: Expected service rate of each exponential of the hyper-exponential
     :param p: Probability of first exponential of the hyper-exponential
     :param counter: Simpy resource object as a counter
     :param waiting: List used to store data
@@ -67,7 +67,7 @@ def simulate_MLn(customers: int, rho: float, mu: list, p: float, n=1, seed=None)
 
     :param customers: Number of customers
     :param rho: System load
-    :param mu: Expected service time for each exponential of the hyper-exponential
+    :param mu: Expected service rate for each exponential of the hyper-exponential
     :param p: Probability of first exponential of the hyper-exponential
     :param n: Number of servers
     :param seed: Optional seed to reproduce results

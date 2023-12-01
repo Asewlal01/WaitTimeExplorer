@@ -8,7 +8,7 @@ def customer(env: simpy.Environment, mu: float, counter: simpy.PriorityResource,
     service time (SJF scheduling).
 
     :param env: Simpy environment
-    :param mu: Expected service time
+    :param mu: Expected service rate of each server
     :param counter: Simpy resource object as counter
     :param waiting: List used to store the waiting time of each customer
     :return: Generator object
@@ -37,8 +37,8 @@ def source(env: simpy.Environment, customers: int, lambda_: float, mu: float, co
 
     :param env: Simpy environment
     :param customers: Number of customers
-    :param lambda_: Expected arrival time
-    :param mu: Expected service time
+    :param lambda_: Expected arrival rate
+    :param mu: Expected service rate of each server
     :param counter: Simpy resource object as a counter
     :param waiting: List used to store data
     :return: Void
@@ -62,7 +62,7 @@ def simulate_MMn_SJF(customers: int, rho: float, mu: float, n=1, seed=None):
 
     :param customers: Number of customers
     :param rho: System load
-    :param mu: Expected service time
+    :param mu: Expected service rate of each server
     :param n: Number of servers
     :param seed: Optional seed to reproduce results
     :return: Waiting time for each customer
