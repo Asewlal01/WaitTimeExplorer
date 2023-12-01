@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def visualize(waiting, title='Distribution of waiting times', color='blue', bins=100, yscaling=None):
+def visualize(waiting, title='Distribution of waiting times', color='blue', bins=100, yscaling=None, dpi=300):
     """
     Function used to visualize the distribution of the waiting time
 
@@ -15,10 +15,10 @@ def visualize(waiting, title='Distribution of waiting times', color='blue', bins
     """
 
     # Create figure
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(dpi=dpi)
 
     # Plot histogram
-    fig = plt.hist(waiting, color=color, bins=bins)
+    fig = plt.hist(waiting, color=color, bins=bins, density=True)
 
     # Add labels and title
     plt.xlabel('Waiting time')
