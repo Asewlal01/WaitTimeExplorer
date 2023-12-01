@@ -11,6 +11,7 @@ def visualize(waiting, title='Distribution of waiting times', color='blue', bins
     :param color: Color used for bins in histogram
     :param bins: Number of bins in the histogram
     :param yscaling: Option scaling of the y-axis e.g. logarithmic
+    :param dpi: DPI of figure
     :return: Figure and axis of Matplotlib object
     """
 
