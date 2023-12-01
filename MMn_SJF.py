@@ -31,7 +31,7 @@ def customer(env: simpy.Environment, mu: float, counter: simpy.PriorityResource,
 
 
 def source(env: simpy.Environment, customers: int, lambda_: float, mu: float, counter: simpy.PriorityResource,
-           waiting: list) -> None:
+           waiting: list):
     """
     Function used to create the customers.
 
@@ -56,17 +56,19 @@ def source(env: simpy.Environment, customers: int, lambda_: float, mu: float, co
         yield env.timeout(t)
 
 
-def simulate_SJF(customers: int, lambda_: float, mu: float, n=1, seed=None):
+def simulate_MMn_SJF(customers: int, rho: float, mu: float, n=1, seed=None):
     """
     Function used to simulate the queue using SJF scheduling.
 
     :param customers: Number of customers
-    :param lambda_: Expected arrival time
+    :param rho: System load
     :param mu: Expected service time
     :param n: Number of servers
     :param seed: Optional seed to reproduce results
     :return: Waiting time for each customer
     """
+    # Calculate lambda
+    lambda_ = rho * n * mu
 
     # Create list for storing waiting times
     waiting = []
@@ -78,7 +80,7 @@ def simulate_SJF(customers: int, lambda_: float, mu: float, n=1, seed=None):
     env = simpy.Environment()
 
     # Create counter
-    counter = simpy.PriorityResource(env, capacity=num_servers)
+    counter = simpy.PriorityResource(env, capacity=n)
 
     # Run process
     env.process(source(env, customers, lambda_, mu, counter, waiting))
