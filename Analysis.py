@@ -41,6 +41,7 @@ def statistics(waiting, print_info=True):
     Function used to return the mean and confidence interval of the waiting times
 
     :param waiting: Array with the waiting time of the customers
+    :param print_info: Boolean that represents if average +- confidence should be printed
     :return: Mean and confidence interval
     """
 
