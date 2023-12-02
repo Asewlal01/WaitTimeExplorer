@@ -32,8 +32,7 @@ def customer(env: simpy.Environment, mu: list, p: float, counter: simpy.Resource
         yield env.timeout(time)
 
 
-def source(env: simpy.Environment, customers: int, lambda_: float, mu: list, p: float, counter: simpy.Resource,
-           waiting: list):
+def source(env: simpy.Environment, customers: int, lambda_: float, mu: list, p: float, counter: simpy.Resource, waiting: list):
     """
     Function used to create the customers in a M/L/n queueing system with two exponential functions
     as the hyper-exponential
@@ -75,7 +74,7 @@ def simulate_MLn(customers: int, rho: float, mu: list, p: float, n=1, seed=None)
     """
 
     # Calculate lambda
-    lambda_ = rho * n * (p * mu[0] + (1 - p) * mu[1])
+    lambda_ = rho * n / (p * 1 / mu[0] + (1 - p) * 1 / mu[1])
 
     # Array for waiting time
     waiting = []
