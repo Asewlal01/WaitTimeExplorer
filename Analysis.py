@@ -62,12 +62,12 @@ def statistics(waiting, print_info=True):
 def plotComparison(rhos, save, names, colors, dpi=300):
     """
 
-    :param rhos:
-    :param save:
-    :param names:
-    :param colors:
-    :param dpi:
-    :return:
+    :param rhos: All the rho's used to compare
+    :param save: Name and path of file to save to
+    :param names: Names of each method (used in legend)
+    :param colors: Colors used in plot for each method
+    :param dpi: DPI of figure
+    :return: Figure and axis object of matplotlib figure
     """
 
     # Create figure
