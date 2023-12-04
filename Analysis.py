@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from MMn import simulate_MMn
 
 
 def visualize(waiting, title='Distribution of waiting times', color='blue', bins=100, yscaling=None, dpi=300):
@@ -92,10 +93,11 @@ def plotComparison(rhos, save, names, colors, dpi=300):
 
     # Plot settings
     ax.grid()
+    ax.tight_layout()
     ax.legend()
     ax.set_xlabel('System load $\\rho$')
     ax.set_ylabel('Average waiting time $W$')
-    fig.dpi = 300
+    fig.dpi = dpi
 
     return fig, ax
 
